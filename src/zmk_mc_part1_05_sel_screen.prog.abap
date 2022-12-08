@@ -51,28 +51,36 @@ REPORT zmk_mc_part1_05_sel_screen.
 
 
 
-SELECTION-SCREEN BEGIN OF BLOCK a1 WITH FRAME TITLE TEXT-002 NO INTERVALS.
-PARAMETERS: p_date1 TYPE datum,
-            p_date2 TYPE datum.
-SELECTION-SCREEN END OF BLOCK a1.
+selection-screen begin of block a1 with frame title text-002 no intervals.
+parameters: p_date1 type datum,
+            p_date2 type datum.
+selection-screen end of block a1.
 
-DATA: gv_counter TYPE n LENGTH 3.
+data: gv_counter type n length 3.
 
-IF p_date1 IS INITIAL OR p_date2 IS INITIAL.
-  MESSAGE 'Her iki tarih alanini da doldurunuz.' TYPE 'S' DISPLAY LIKE 'E'.
-  EXIT.
-ENDIF.
 
-IF p_date1 >= p_date2.
-  MESSAGE 'Ilk girilen tarih ikinci girilen tarihten kucuk olmalidir' TYPE 'S' DISPLAY LIKE 'E'.
-  EXIT.
-ENDIF.
+initialization.
 
-DO.
-  p_date1 = p_date1 + 1.
-  gv_counter = gv_counter + 1.
-  IF p_date1 = p_date2.
-    EXIT.
-  ENDIF.
-ENDDO.
-WRITE: gv_counter.
+  %_p_date1_%_app_%-text = 'Erst Datum'.
+  %_p_date2_%_app_%-text = 'Zweite Datum'.
+
+start-of-selection.
+
+  if p_date1 is initial or p_date2 is initial.
+    message 'Her iki tarih alanini da doldurunuz.' type 'S' display like 'E'.
+    exit.
+  elseif p_date1 >= p_date2.
+    message 'Ilk girilen tarih ikinci girilen tarihten kucuk olmalidir' type 'S' display like 'E'.
+    exit.
+  endif.
+
+
+  do.
+    p_date1 = p_date1 + 1.
+    gv_counter = gv_counter + 1.
+    if p_date1 = p_date2.
+      exit.
+    endif.
+  enddo.
+  
+  write: gv_counter.
